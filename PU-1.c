@@ -63,28 +63,36 @@ char GetAwal(char HowBegin[15]);
 
 /*============ Body Program ============*/
 int main(){
+    system("color 8");
+    gotoxy(40,40);
     char opsi, hb[15],cr[5];
+        start:
     ReadAwal(hb);
     opsi = GetAwal(hb);
-    while(opsi=='A' || opsi=='B' || opsi=='C'){
+    // while(opsi=='A' || opsi=='B' || opsi=='C'){
         switch (opsi){
           case 'A': 
             ReadCaraBermain(cr);
+            goto start;
           break;
           case 'B':
             DisplayLoading();
             DisplayPapan();
           break;
           default: printf("Masukkan Tidak Valid");
+          getch();
+          goto start;
+          break;
         }
-        ReadAwal(hb);
-        opsi = GetAwal(hb);
-    }
+        // ReadAwal(hb);
+        // opsi = GetAwal(hb);
+    // }
 }
 
 
 /*============ Body Modul ============*/
 void DisplayAwal(){
+    system("cls");
     printf(" \n \
    _ _ _ _    _ _ _ _                 _ _ _ _\n" \
 "           |  |       |   |       |   |       |\n" \
@@ -121,6 +129,7 @@ char GetAwal(char HowBegin[15]){
 }
 
 void DisplayCaraBermain(){
+    system("cls");
     printf("\n| CARA BERMAIN |\n" \
     "\n" \
     "> w -> up\n" \
@@ -154,17 +163,18 @@ char isValidCara(char isok[3]){
 }
 
 void DisplayLoading(){
-   loading(20 - 1, 19 - 1, 30 , 2, simbol);
-   gotoxy(48,15);
-   printf("TEKAN ENTER UNTUL KELUAR");
-   getch();
+    system("cls");
+   loading(20 - 1, 19 - 1, 30 , 1, simbol);
+   gotoxy(48,10);
+//    printf("TEKAN ENTER UNTUL KELUAR");
+//    getch();
 }
 
 void loading(int bg, int fg, int panjang, int delay, int simbol[20]){
  int k, l;
    for (k=0; k<=panjang; k+=2)
    {
-      gotoxy(48,20);
+      gotoxy(48,10);
       printf("\n\tLOADING\n\t");
       for (l=0; l<k; l++){
          printf("%c", simbol[fg]);
@@ -177,13 +187,15 @@ void loading(int bg, int fg, int panjang, int delay, int simbol[20]){
 }
 
 void gotoxy(int x, int y){
-   COORD coord;
-   coord.X=x;
-   coord.Y=y;
-   SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),coord);
 }
 
 void DisplayPapan(){
+    system("cls");
+    printf("\n");
     printf("=====================\n");
   for (int i = 0; i < UKURAN_PAPAN; i++) {
     for (int j = 0; j <UKURAN_PAPAN; j++) {
@@ -192,9 +204,14 @@ void DisplayPapan(){
     printf("|\n");
     printf("=====================\n");
   }
+    printf("(Masukkan: w | a | s | d | k )--> \n");
+    printf("Skor :\n");
+    printf("High Skor :");
+  getch();
 }
 
 void DisplayMenang(){
+    system("cls");
     printf("\n" \
     " =========================\n" \
 "|                         |\n" \
@@ -206,6 +223,7 @@ void DisplayMenang(){
 }
 
 void DisplayKeluar(){
+    system("cls");
     printf("\n" \
     " =========================\n" \
 "|                         |\n" \
@@ -217,6 +235,7 @@ void DisplayKeluar(){
 }
 
 void DisplayKalah(){
+    system("cls");
     printf("\n" \
     " =========================\n" \
 "|                         |\n" \
