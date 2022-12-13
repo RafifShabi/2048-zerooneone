@@ -8,11 +8,9 @@
 #define MAXPREV 500
 
 /*============ Variable Global ============*/
-int arr[4][4]={0},c[4],temp=0,len=0,score=0,highscore=0,count=0,ch=0;//COUNT WILL COUNT THE NO OF STEPS
+int c[4],temp=0,len=0,score=0,highscore=0,count=0,ch=0;//COUNT WILL COUNT THE NO OF STEPS
 
 int i,j,k,papan;
-
-char how_or_begin[15];
 
 typedef struct{
     int skor;
@@ -158,6 +156,8 @@ void DisplayCaraBermain(){
     "> d -> right\n" \
     "> a -> left\n" \
     "> k -> keluar\n" \
+    "> u -> ulang permainan\n" \
+    "> m -> mundur langkah\n" \
     "> tekan tombol enter untuk eksekusi\n" \
     "\n" \
     "Ketik 'ok' jika mengerti: ");
@@ -249,11 +249,11 @@ void angkaacak(){
     do{
     i=(rand ())%(MAXRANDOMVALUE+1);
     j=(rand ())%(MAXRANDOMVALUE+1);
-    }while(arr[i][j]!=0);
+    }while(Papan[i][j]!=0);
 
     no=((rand ()%10)+1);      //membuat angka random dari 1-10
     if (no>=1 && no<=10){
-        arr[i][j]=2;
+        Papan[i][j]=2;
     }
 }
 
@@ -298,7 +298,7 @@ void createprev(int ***p){
     }
     for(i=0;i<4;i++){
         for(j=0;j<4;j++){
-            p[MAXPREV-count][i][j]=arr[i][j];
+            p[MAXPREV-count][i][j]=Papan[i][j];
         }
     }
 }
@@ -316,7 +316,7 @@ void updatearrtoprev(int ***p){
         score=data;
     for(i=0;i<4;i++){
         for(j=0;j<4;j++){
-            arr[i][j]=p[MAXPREV-count][i][j];
+            Papan[i][j]=p[MAXPREV-count][i][j];
         }
     }
     count--;
@@ -326,7 +326,7 @@ void UlangPermainan(){
     int i,j;
     for(i=0;i<4;i++){
         for(j=0;j<4;j++){
-            arr[i][j]=0;
+            Papan[i][j]=0;
         }
     }
     system("cls") ;
@@ -370,11 +370,11 @@ void Permainan(){
               createprev(p);
             for(i=0;i<4;i++){
                 for(j=0;j<4;j++){
-                    c[j]=arr[i][j];
+                    c[j]=Papan[i][j];
                 }
                 rupdate();
                 for(k=0;k<4;k++){
-                    arr[i][k]=c[k];
+                    Papan[i][k]=c[k];
                 }
             }
         }else if(choice=='a' || choice=='A'){
@@ -383,11 +383,11 @@ void Permainan(){
             createprev(p);
             for(i=0;i<4;i++){
                 for(j=3;j>=0;j--){
-                    c[3-j]=arr[i][j];
+                    c[3-j]=Papan[i][j];
                 }
                 rupdate();
                 for(k=0;k<4;k++){
-                    arr[i][3-k]=c[k];
+                    Papan[i][3-k]=c[k];
                 }
             }
         }else if(choice=='s' || choice =='S'){
@@ -395,11 +395,11 @@ void Permainan(){
                createprev(p);
             for(i=0;i<4;i++){
                 for(j=0;j<4;j++){
-                    c[j]=arr[j][i];
+                    c[j]=Papan[j][i];
                 }
                 rupdate();
                 for(k=0;k<4;k++){
-                    arr[k][i]=c[k];
+                    Papan[k][i]=c[k];
                 }
             }
         }else if(choice=='w' || choice=='W'){
@@ -407,11 +407,11 @@ void Permainan(){
               createprev(p);
             for(i=0;i<4;i++){
                 for(j=3;j>=0;j--){
-                    c[3-j]=arr[j][i];
+                    c[3-j]=Papan[j][i];
                 }
                 rupdate();
                 for(k=0;k<4;k++){
-                  arr[3-k][i]=c[k];
+                  Papan[3-k][i]=c[k];
                 }
             }
         }else if(choice=='m' || choice =='M'){
@@ -437,10 +437,10 @@ void Permainan(){
         }else{
             for(m=0;m<4;m++){
                 for(n=3;n>0;n--){
-                    if(arr[m][n]==arr[m][n-1] || arr[m][n]==0 || arr[m][n-1]==0){
+                    if(Papan[m][n]==Papan[m][n-1] || Papan[m][n]==0 || Papan[m][n-1]==0){
                         same=1;
                         break;
-                    }if(arr[n][m]==arr[n-1][m] || arr[m][n]==0 || arr[m][n-1]==0){
+                    }if(Papan[n][m]==Papan[n-1][m] || Papan[m][n]==0 || Papan[m][n-1]==0){
                         same=1;
                         break;
                     }
@@ -477,13 +477,13 @@ void papanmain(){
             if(j==0){
                 printf("\t\t\t\t\t|");
             }
-            if(arr[i][j]!=0){
-                papan=kosong(arr[i][j]);
+            if(Papan[i][j]!=0){
+                papan=kosong(Papan[i][j]);
                 //printf("%d:",len);
                 for(k=0;k<4-len;k++){
                     printf(" ");
                 }
-                printf("%d",arr[i][j]);
+                printf("%d",Papan[i][j]);
 
                 for(k=0;k<4-len;k++){
                     printf(" ");
