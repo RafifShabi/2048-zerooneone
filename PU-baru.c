@@ -288,7 +288,7 @@ void UlangPermainan(){
     }
     system("cls");
     skor=0;
-    AcakAngka();
+    //AcakAngka();
 }
 
 void Permainan(){
@@ -308,7 +308,7 @@ void Permainan(){
             fprintf(ptr,"%d",skor);
             fclose(ptr);
         }
-        choice=getch();
+        choice=getch();     //variable choice menampung masukkan player untuk arah gerak papan w / a / s / d / u / k
         if(choice=='D' || choice =='d'){
             for(i=0;i<4;i++){
                 for(j=0;j<4;j++){
@@ -351,6 +351,7 @@ void Permainan(){
             }
         }else if(choice=='u' || choice=='U'){
             UlangPermainan();
+            AcakAngka();
             papanmain();
             continue;
         }else if(choice=='k'||choice=='K'){
@@ -364,14 +365,13 @@ void Permainan(){
                     system("cls");
                     papanmain();break;
             }
-        }
-        if(temp==1){
+        }if(temp==1){
             temp=0;
-            system("cls") ;
+            system("cls");
             printf("\n%c\n",choice);
             AcakAngka();
             papanmain();
-        }else if(temp==8){
+        }else if(temp==8){ 
                 temp=0;
                 papanmain();
         }else{
@@ -385,11 +385,15 @@ void Permainan(){
                         break;
                     }
                 }
-                if(same==1)
+                if(same==1){
                     break;
+                }    
             }
             if(same==1){
                 printf("\n\t\t\t\t\t---------------PERINTAH TIDAK VALID---------------\n");
+                getch();
+                system("cls"); //hhhhhh
+                papanmain();
                 same=0;
             }else{
                 DisplayKalah();
@@ -399,7 +403,7 @@ void Permainan(){
             ynmainlagi=getch();
             switch (ynmainlagi){
                     case 'Y':
-                    case 'y':UlangPermainan(); papanmain();break;
+                    case 'y':UlangPermainan();main();break;  //papanmain();break;
                     case 'n':
                     case 'N':exit(0);
                     default: 
@@ -419,7 +423,7 @@ void Permainan(){
             ynmainlagi=getch();
             switch (ynmainlagi){
                     case 'Y':
-                    case 'y':UlangPermainan(); papanmain();break;
+                    case 'y':UlangPermainan();main();break;      //papanmain();break;
                     case 'n':
                     case 'N':exit(0);
                     default: 
