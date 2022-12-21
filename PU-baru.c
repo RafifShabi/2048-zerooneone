@@ -93,13 +93,13 @@ void DisplayUlangi();
 int main(){
     system("color 8");
     char opsi, hb[15],cr[15];
-        start:
+        start:               // titik start
     ReadAwal(hb);
     opsi = GetAwal(hb);
       switch (opsi){
         case 'A': 
            ReadCaraBermain(cr);
-           goto start;
+           goto start;      // untuk kembali ke titik start
         break;
         case 'B':
            DisplayLoading();
@@ -108,7 +108,7 @@ int main(){
         default: 
         printf("\n\t\t\t\t\t       Masukkan Tidak Valid");
         getch();
-        goto start;
+        goto start;        // untuk kembali ke titik start
         break;
     }
 }
@@ -392,7 +392,7 @@ void Permainan(){
             if(same==1){
                 printf("\n\t\t\t\t\t---------------PERINTAH TIDAK VALID---------------\n");
                 getch();
-                system("cls"); //hhhhhh
+                system("cls"); 
                 papanmain();
                 same=0;
             }else{
