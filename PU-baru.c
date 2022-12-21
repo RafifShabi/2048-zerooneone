@@ -1,3 +1,13 @@
+/*
+  Program : Permainan 2048
+  Author : 1. 221524033 Alisha Nara Chandrakirana 
+           2. 221524055 Rafif Shabi Prasetyo
+           3. 221524059 Sarah
+  Tanggal : 21 Desember 2022
+  I.S. : Belum ada permainan 2048 yang bisa dijalankan
+  F.S. : Permaianan 2048 bisa dijalankan dan memiliki fitur highscore
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,24 +16,10 @@
 #include <time.h>
 
 /*============ Variable Global ============*/
-int c[4],temp=0,len=0,score=0,highscore=0,count=0,ch=0;
-
-int i,j,k,papan;
-
-typedef struct{
-    int skor;
-    int highscore;
-}player;
-
-typedef struct {
-    int Papan;
-    char Inputan;
-}games;
+int c[4],temp=0,len=0,skor=0,highscore=0;
 
 #define MAXRANDOMVALUE 3
 //mendeklarasikan konstanta untuk
-#define MAXPREV 500
-// mendeklarasikan konstanta untuk 
 #define UKURAN_PAPAN 4
 // mendeklarasikan konstanta untuk ukuran papan permainan
 
@@ -46,7 +42,7 @@ void DisplayCaraBermain();
 void ReadCaraBermain(char *cara);
 /*Prosedur berisi kumpulan modul jika memilih perintah "cara bermain"*/
 
-char isValidCara(char isok[3]);
+char isValidCara(char isok[15]);
 /*Fungsi mengembalikan karakter tertentu jika masukan dari ReadCaraBermain adalah "ok"*/
 
 void DisplayLoading();
@@ -70,13 +66,8 @@ int kosong(int n);
 void AcakAngka();
 /*Prosedur mengacak angka dan indeks untuk memunculkan angka 2*/
 
-void rupdate();
-
-void createprev(int ***p);
-/*Prosedur membuat riwayat jalannya permainan agar dapat melakukan mundur langkah*/
-
-void updatearrtoprev(int ***p);
-/*Prosedur memperbarui tampilan papan ketika pemain ingin mundur langkah*/
+void updatePapan();
+/**/
 
 void UlangPermainan();
 /*Prosedur untuk mengulangi permainan*/
@@ -84,9 +75,6 @@ void UlangPermainan();
 void Permainan();
 /*Prosedur menjalankan permainan mulai dari perintah (w, a, s, d, k, u, m) 
 serta file untuk menyimpan highscore dan mundur langkah*/
-
-void papanmain();
-/*Prosedur menampilkan papan permainan*/
 
 void DisplayMenang();
 /*Prosedur menampilkan tampilan menang permainan 2048*/
@@ -97,34 +85,32 @@ void DisplayKeluar();
 void DisplayKalah();
 /*Prosedur menampilkan tampilan ketika player kalah permainan 2048*/
 
-void GetKalah();
-/*Prosedur menampilkan nilai yang diperoleh pemain ketika pemain kalah*/
+void DisplayUlangi();
+/*Prosedur menampilkan tampilan ketika player kalah atau menang untuk mengkofirmasi apakah player akan bermain kembali atau tidak*/
+
 
 /*============ Body Program ============*/
 int main(){
     system("color 8");
-    char opsi, hb[15],cr[5];
+    char opsi, hb[15],cr[15];
         start:
     ReadAwal(hb);
     opsi = GetAwal(hb);
-    // while(opsi=='A' || opsi=='B' || opsi=='C'){
-        switch (opsi){
-          case 'A': 
-            ReadCaraBermain(cr);
-            goto start;
-          break;
-          case 'B':
-            DisplayLoading();
-            Permainan();
-          break;
-          default: printf("Masukkan Tidak Valid");
-          getch();
-          goto start;
-          break;
-        }
-        // ReadAwal(hb);
-        // opsi = GetAwal(hb);
-    // }
+      switch (opsi){
+        case 'A': 
+           ReadCaraBermain(cr);
+           goto start;
+        break;
+        case 'B':
+           DisplayLoading();
+           Permainan();
+        break;
+        default: 
+        printf("\n\t\t\t\t\t       Masukkan Tidak Valid");
+        getch();
+        goto start;
+        break;
+    }
 }
 
 
@@ -168,21 +154,20 @@ char GetAwal(char HowBegin[15]){
 
 void DisplayCaraBermain(){
     system("cls");
-    printf("\n| CARA BERMAIN |\n" \
-    "\n" \
-    "> w -> up\n" \
-    "> s -> down\n" \
-    "> d -> right\n" \
-    "> a -> left\n" \
-    "> k -> keluar\n" \
-    "> u -> ulang permainan\n" \
-    "> m -> mundur langkah\n" \
-    "\n" \
-    "Ketik 'ok' jika mengerti: ");
+    printf("\t\t\t\t\t     | CARA BERMAIN |\n" \
+    "\t\t\t\t\n" \
+    "\t\t\t\t\t     > w -> up\n" \
+    "\t\t\t\t\t     > s -> down\n" \
+    "\t\t\t\t\t     > d -> right\n" \
+    "\t\t\t\t\t     > a -> left\n" \
+    "\t\t\t\t\t     > k -> keluar\n" \
+    "\t\t\t\t\t     > u -> ulang permainan\n" \
+    "\t\t\t\t\t\n" \
+    "\t\t\t\t\t     Ketik 'ok' jika mengerti: ");
 }
 
 void ReadCaraBermain(char *cara){
-    char isok[3];
+    char isok[15];
     char NotOk='X',ok;
     do{
     DisplayCaraBermain();
@@ -191,7 +176,7 @@ void ReadCaraBermain(char *cara){
     }while (ok == NotOk);
 }
 
-char isValidCara(char isok[3]){
+char isValidCara(char isok[15]){
     char valid[]="ok";
     int ok;
     if (strcmp(isok,valid)==0){
@@ -234,8 +219,8 @@ void gotoxy(int x, int y){
 
 void movevalue(int k){
     int i;
-    if(k==3){
-        return;
+    if(k==3){ 
+        return; //return???
     }
     for(i=k;i<4;i++){
         if(c[i]!=0){
@@ -275,15 +260,12 @@ void AcakAngka(){
     }
 }
 
-void rupdate(){
+void updatePapan(){
     int i,j;
     for(i=3;i>0;i--){
         if(c[i]==c[i-1]){
-            c[i]+=c[i-1];                   //+=, isi sekaligus tambah
-            score=score+c[i];
-            if(score>highscore){
-
-            }
+            c[i]+=c[i-1];                   //a+=b, isi sekaligus tambah   a=a+b
+            skor=skor+c[i];
             temp=1;
             c[i-1]=0;
         }else if(c[i-1]==0 && c[i]!=0){
@@ -297,49 +279,6 @@ void rupdate(){
     movevalue(0);
 }
 
-void createprev(int ***p){
-      int i,j,k;
-      FILE *ptr;
-      ptr=fopen("hstr.txt","a");
-      fprintf(ptr,"%d ",score);
-      fclose(ptr);
-
-    if(count==MAXPREV+1){
-        for(i=MAXPREV;i>0;i--){
-            for(j=0;j<4;j++){
-                for(k=0;k<4;k++){
-                        p[i][j][k]=p[i-1][j][k];
-                }
-            }
-        }
-        count=MAXPREV;
-    }
-    for(i=0;i<4;i++){
-        for(j=0;j<4;j++){
-            p[MAXPREV-count][i][j]=Papan[i][j];
-        }
-    }
-}
-
-void updatearrtoprev(int ***p){
-    int data,i,j;
-    if(count==0){
-        printf("\n\t\t\t\t\t-------LANGKAH SEBELUMNYA TIDAK ADA-------\n");
-        return;
-    }
-    FILE *ptr=fopen("hstr.txt","r+");
-        for(i=0;i<count;i++){
-            fscanf(ptr,"%d ",&data);
-        }
-        score=data;
-    for(i=0;i<4;i++){
-        for(j=0;j<4;j++){
-            Papan[i][j]=p[MAXPREV-count][i][j];
-        }
-    }
-    count--;
-}
-
 void UlangPermainan(){
     int i,j;
     for(i=0;i<4;i++){
@@ -348,96 +287,69 @@ void UlangPermainan(){
         }
     }
     system("cls");
-    score=0;
+    skor=0;
     AcakAngka();
 }
 
 void Permainan(){
     system("cls") ;
     int i,j,k,m,n,same=0;
-    char choice,s=-33,ynKeluar;
-    int ***p;
-    p=(int ***)malloc(sizeof(int *)*(MAXPREV+1));
-    for(int i=0;i<MAXPREV+1;i++){
-        *(p+i)=(int **)malloc(sizeof(int *)*4);
-    }
-    for(int i=0;i<MAXPREV+1;i++){
-        for(int j=0;j<4;j++){
-            p[i][j]=(int *)malloc(sizeof(int)*4);
-        }
-    }
-    createprev(p);
+    char choice,s=-33,ynKeluar,ynmainlagi;
 
     FILE *ptr;
     ptr=fopen("highscore.txt","r");
     fscanf(ptr,"%d",&highscore);
     fclose(ptr);
-    ptr=fopen("hstr.txt","w");
-    fclose(ptr);
     AcakAngka();
     papanmain();
     while(1){
-        if(score>highscore){
+        if(skor>highscore){
             ptr=fopen("highscore.txt","w");
-            fprintf(ptr,"%d",score);
+            fprintf(ptr,"%d",skor);
             fclose(ptr);
         }
         choice=getch();
         if(choice=='D' || choice =='d'){
-            count++;ch++;
-              createprev(p);
             for(i=0;i<4;i++){
                 for(j=0;j<4;j++){
                     c[j]=Papan[i][j];
                 }
-                rupdate();
+                updatePapan();
                 for(k=0;k<4;k++){
                     Papan[i][k]=c[k];
                 }
             }
         }else if(choice=='a' || choice=='A'){
-            count++;
-            ch++;
-            createprev(p);
             for(i=0;i<4;i++){
                 for(j=3;j>=0;j--){
                     c[3-j]=Papan[i][j];
                 }
-                rupdate();
+                updatePapan();
                 for(k=0;k<4;k++){
                     Papan[i][3-k]=c[k];
                 }
             }
         }else if(choice=='s' || choice =='S'){
-            count++;ch++;
-               createprev(p);
             for(i=0;i<4;i++){
                 for(j=0;j<4;j++){
                     c[j]=Papan[j][i];
                 }
-                rupdate();
+                updatePapan();
                 for(k=0;k<4;k++){
                     Papan[k][i]=c[k];
                 }
             }
         }else if(choice=='w' || choice=='W'){
-            count++;ch++;
-              createprev(p);
             for(i=0;i<4;i++){
                 for(j=3;j>=0;j--){
                     c[3-j]=Papan[j][i];
                 }
-                rupdate();
+                updatePapan();
                 for(k=0;k<4;k++){
                   Papan[3-k][i]=c[k];
                 }
             }
-        }else if(choice=='m' || choice =='M'){
-            system("cls");
-            updatearrtoprev(p);
-            temp=8;
         }else if(choice=='u' || choice=='U'){
-            count=0;
             UlangPermainan();
             papanmain();
             continue;
@@ -448,7 +360,9 @@ void Permainan(){
                     case 'Y':
                     case 'y':exit(0);break;
                     case 'n':
-                    case 'N':UlangPermainan(); papanmain();
+                    case 'N':
+                    system("cls");
+                    papanmain();break;
             }
         }
         if(temp==1){
@@ -466,7 +380,7 @@ void Permainan(){
                     if(Papan[m][n]==Papan[m][n-1] || Papan[m][n]==0 || Papan[m][n-1]==0){
                         same=1;
                         break;
-                    }if(Papan[n][m]==Papan[n-1][m] || Papan[m][n]==0 || Papan[m][n-1]==0){
+                    }if(Papan[n][m]==Papan[n-1][m] || Papan[n][m]==0 || Papan[n][m-1]==0){
                         same=1;
                         break;
                     }
@@ -478,22 +392,47 @@ void Permainan(){
                 printf("\n\t\t\t\t\t---------------PERINTAH TIDAK VALID---------------\n");
                 same=0;
             }else{
-                GetKalah();
+                DisplayKalah();
                 getch();
-                exit(0);
+                ulang:
+                DisplayUlangi();
+            ynmainlagi=getch();
+            switch (ynmainlagi){
+                    case 'Y':
+                    case 'y':UlangPermainan(); papanmain();break;
+                    case 'n':
+                    case 'N':exit(0);
+                    default: 
+                             printf("\n\t\t\t\t\tMasukkan Tidak Valid");
+                             getch();
+                             goto ulang;
+                }
             }
         }
         for(i=0;i<4;i++){
             for(k=0;k<4;k++){
                 if(Papan[k][i]==2048){
-                    GetKalah();
+                    DisplayMenang();
                     getch();
-                    exit(0);
+                    ulangi:
+                    DisplayUlangi();
+            ynmainlagi=getch();
+            switch (ynmainlagi){
+                    case 'Y':
+                    case 'y':UlangPermainan(); papanmain();break;
+                    case 'n':
+                    case 'N':exit(0);
+                    default: 
+                             printf("\n\t\t\t\t\tMasukkan Tidak Valid");
+                             getch();
+                             goto ulangi;
+                    }
                 }
             }
         }
     }
 }
+
 
 void papanmain(){
         int i,j,k,papan;
@@ -531,16 +470,14 @@ void papanmain(){
         }
     }
     printf("\n\t\t\t\t\t=================================\n");
-    printf("\t\t\t\t\tSkor:%d\n\t\t\t\t\t",score);
+    printf("\t\t\t\t\tSkor:%d\n\t\t\t\t\t",skor);
 
-          if(score<highscore){
-              printf("High Score:%d\t\t\t\t\t\n",highscore);
+          if(skor<highscore){
+              printf("Highscore:%d\t\t\t\t\t\n",highscore);
           }else{
-              highscore=score;
-              printf("High Score:%d\t\t\t\t\t\n",highscore);
+              highscore=skor;
+              printf("Highscore:%d\t\t\t\t\t\n",highscore);
           }
-
-    printf("\t\t\t\t\tMundur-> M\t\t\t\t\t\n");
     printf("\t\t\t\t\tUlangi-> U\t\t\t\t\t\n");
     printf("\t\t\t\t\tKeluar-> K\t\t\t\t\t\n");
     printf("\t\t\t\t\t(Masukkan: w | a | s | d )-->\n\t\t\t\t\t");
@@ -572,17 +509,25 @@ void DisplayKeluar(){
 
 void DisplayKalah(){
     system("cls");
-    printf("\n" \
-    "\t\t\t\t\t =========================\n" \
+printf("\n" \
+"\t\t\t\t\t =========================\n" \
 "\t\t\t\t\t|                         |\n" \
 "\t\t\t\t\t|    Yaahhh kamu kalah    |\n" \
 "\t\t\t\t\t| coba lagi permainannya! |\n" \
-"\t\t\t\t\t|        skor kamu        |\n" );
+"\t\t\t\t\t|        skor kamu        |\n");
+printf("\t\t\t\t\t|\t    %d\t\t  |",skor);
+printf("\n\t\t\t\t\t|                         |"\
+"\n\t\t\t\t\t =========================");
 }
 
-void GetKalah(){
-    DisplayKalah();
-    printf("\t\t\t\t\t|\t    %d\t  |",score);
-    printf("\n\t\t\t\t\t|                         |");
-    printf("\n\t\t\t\t\t =========================");
+void DisplayUlangi(){
+    system("cls");
+    printf("\n" \
+    "\t\t\t\t\t =========================\n" \
+"\t\t\t\t\t|                         |\n" \
+"\t\t\t\t\t|    Apakah kamu ingin    |\n" \
+"\t\t\t\t\t|     bermain kembali?    |\n" \
+"\t\t\t\t\t|       Ketik (y/n)       |\n" \
+"\t\t\t\t\t|                         |\n" \
+"\t\t\t\t\t =========================\n");
 }
